@@ -11,6 +11,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url var="buildingListURL" value="/admin/building-edit"></c:url>
+<c:url var="buildingAPI" value="/api/building"/>
+
 
 <html>
 <head>
@@ -67,6 +69,7 @@
                                     <form:form id="listForm" action="/admin/building-list" method="GET"
                                                modelAttribute="buildingSearchRequest">
                                         <div class="row">
+
                                             <div class="col-md-6">
                                                 <label>Tên tòa nhà</label>
                                                     <%--                                                <input type="text" class="form-control" name="buildingName"--%>
@@ -84,13 +87,14 @@
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <label>Quận</label>
-                                                <select class="form-control" name="district" id="district">
-                                                    <option value="">Chọn Quận</option>
-                                                    <option value="Quan_1">Quận 1</option>
-                                                    <option value="Quan_2">Quận 2</option>
-                                                    <option value="Quan_3">Quận 3</option>
-                                                    <option value="Quan_4">Quận 10</option>
-                                                </select>
+                                                <form:select path="district" class="form-control" name="district"
+                                                             id="district">
+                                                    <form:option value="">Chọn Quận</form:option>
+                                                    <form:options items="${districts}"/>
+                                                    <%--                                                    <option value="Quan_2">Quận 2</option>--%>
+                                                    <%--                                                    <option value="Quan_3">Quận 3</option>--%>
+                                                    <%--                                                    <option value="Quan_4">Quận 10</option>--%>
+                                                </form:select>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Phường</label>
@@ -166,27 +170,29 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <label>Nhân viên</label>
-                                                <select class="form-control" name="staffId" id="staffId">
-                                                    <option value="">Chọn nhân viên</option>
-                                                    <option value="1">Nguyễn Văn A</option>
-                                                    <option value="2">Nguyễn Văn B</option>
-                                                </select>
+                                                <form:select class="form-control" name="staffId" id="staffId"
+                                                             path="staffId">
+                                                    <form:option value="">Chọn nhân viên</form:option>
+                                                    <form:options items="${staffs}"/>
+                                                    <%--                                                    <form:option value="2">Nguyễn Văn B</form:option>--%>
+                                                </form:select>
                                             </div>
                                         </div>
 
                                         <div class="row" style="margin-top:10px;">
                                             <div class="col-md-12">
-                                                <label class="checkbox-inline">
-                                                    <input type="checkbox" name="typeCode"
-                                                           value="NOI_THAT">
-                                                    Nội thất
-                                                </label>
-                                                <label class="checkbox-inline"><input type="checkbox" name="typeCode"
-                                                                                      value="NGUYEN_CĂN"> Nguyên
-                                                    căn</label>
-                                                <label class="checkbox-inline"><input type="checkbox" name="typeCode"
-                                                                                      value="TANG_TRET"> Tầng
-                                                    trệt</label>
+                                                <form:checkboxes items="${buildingTypeCodes}" path="typeCode"/>
+                                                    <%--                                                <label class="checkbox-inline">--%>
+                                                    <%--                                                    <input type="checkbox" name="typeCode"--%>
+                                                    <%--                                                           value="NOI_THAT">--%>
+                                                    <%--                                                    Nội thất--%>
+                                                    <%--                                                </label>--%>
+                                                    <%--                                                <label class="checkbox-inline"><input type="checkbox" name="typeCode"--%>
+                                                    <%--                                                                                      value="NGUYEN_CĂN"> Nguyên--%>
+                                                    <%--                                                    căn</label>--%>
+                                                    <%--                                                <label class="checkbox-inline"><input type="checkbox" name="typeCode"--%>
+                                                    <%--                                                                                      value="TANG_TRET"> Tầng--%>
+                                                    <%--                                                    trệt</label>--%>
                                             </div>
                                         </div>
 
@@ -224,7 +230,7 @@
                                 </a>
 
 
-                                <button type="button" class="btn btn-xs btn-outline-danger">
+                                <button type="button" class="btn btn-xs btn-outline-danger" id="btnDeleteBuildings">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                          fill="currentColor" class="bi bi-building-fill-dash" viewBox="0 0 16 16">
                                         <path
@@ -245,7 +251,7 @@
 
                 <div class="row">
                     <div class="col-xs-12">
-                        <table id="simple-table" class="table table-striped table-bordered table-hover">
+                        <table id="tableList" class="table table-striped table-bordered table-hover">
                             <thead>
                             <tr>
                                 <th class="center">
@@ -275,12 +281,17 @@
                                 <tr>
                                     <td class="center">
                                         <label class="pos-rel">
-                                            <input type="checkbox" class="ace" value="${buildingItem.id}">
+                                            <input type="checkbox" name="buildingIds" value="${buildingItem.id}">
+                                            <input type="hidden" name="buildingIds" value="${buildingItem.id}">
+
+
+                                                <%--                                            <input type="checkbox" class="ace" value="${buildingItem.id}">--%>
                                             <span class="lbl"></span>
+
                                         </label>
                                     </td>
 
-                                    <td>${buildingItem.name}</td>
+                                    <td>${buildingItem.buildingName}</td>
                                     <td>${buildingItem.address}</td>
                                     <td>${buildingItem.numberOfBasement}</td>
                                     <td>${buildingItem.managerName}</td>
@@ -302,11 +313,12 @@
                                             </button>
 
                                             <a class="btn btn-xs btn-info" title="Chỉnh sửa tòa nhà"
-                                               href="/admin/building-edit">
+                                               href="/admin/building-edit-${buildingItem.id}">
                                                 <i class="ace-icon fa fa-pencil bigger-120"></i>
                                             </a>
 
-                                            <button class="btn btn-xs btn-danger">
+                                            <button class="btn btn-xs btn-danger"
+                                                    onclick="deleteBuilding(${buildingItem.id})">
                                                 <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                             </button>
 
@@ -439,6 +451,39 @@
         e.preventDefault();
         $(('#listForm')).submit();
     });
+
+    function deleteBuilding(buildingId) {
+        var id = [buildingId];
+        $('#buildingId').val();
+        deleteBuildings(id)
+    }
+
+    $('#btnDeleteBuildings').click(function (e) {
+        e.preventDefault();
+        var buildingIds = $('#tableList').find('tbody input[type=checkbox]:checked').map(function () {
+            return $(this).val();
+        }).get();
+        deleteBuildings(buildingIds);
+    });
+
+    function deleteBuildings(data) {
+        $.ajax({
+            type: "Delete", // định nghĩa phương thức http
+            // url: "http://localhost:8081/admin/building", // url api để gọi api
+            url: "${buildingAPI}/" + data, // url api để gọi api
+            data: JSON.stringify(data),     // định dạng file dữ liệu gửi đến server
+            contentType: "application/json",
+            dataType: "JSON", // định dạng của respond
+            success: function (result) {
+                console.log("Đã thành công!");
+            },
+            error: function (respond) {
+                console.log("Đã thất bại!");
+                console.log(respond);
+            }
+        });
+    }
+
 </script>
 
 
