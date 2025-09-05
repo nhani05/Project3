@@ -29,23 +29,53 @@ public class UserEntity extends BaseEntity {
     @Column(name = "email", unique = true)
     private String email;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role",
+    // khóa ngoại đầu tiên tham chiếu tới bảng hiện tại
+    // khóa ngoại tiệp theo tham chiếu tới bảng role
+    @ManyToMany
+    @JoinTable(name = "user_role", // bảng trung gian
             joinColumns = @JoinColumn(name = "user_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false))
-    private List<RoleEntity> roles = new ArrayList<>();
 
+    private List<RoleEntity> roleEntities = new ArrayList<RoleEntity>();
+    // dung mac dinh fetch type
+    @ManyToMany
+    @JoinTable(name = "assignmentbuilding",
+            joinColumns = @JoinColumn(name = "staffid", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "buildingid", nullable = false)
+    )
+    private List<BuildingEntity> buildingEntities = new ArrayList<>();
 
-//    @OneToMany(mappedBy="staffs", fetch = FetchType.LAZY)
-//    private List<AssignmentBuildingEntity> assignmentBuildingEntities = new ArrayList<>();
-//
-//    @OneToMany(mappedBy="users", fetch = FetchType.LAZY)
-//    private List<UserRoleEntity> userRoleEntities = new ArrayList<>();
+    //----------------------------------------------------------------------------------------------------------
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
+    public List<RoleEntity> getRoleEntities() {
+        return roleEntities;
+    }
+
+    public void setRoleEntities(List<RoleEntity> roleEntities) {
+        this.roleEntities = roleEntities;
+    }
+
+    public List<BuildingEntity> getBuildingEntities() {
+        return buildingEntities;
+    }
+
+    public void setBuildingEntities(List<BuildingEntity> buildingEntities) {
+        this.buildingEntities = buildingEntities;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUserName() {
         return userName;
@@ -79,14 +109,6 @@ public class UserEntity extends BaseEntity {
         this.status = status;
     }
 
-    public List<RoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<RoleEntity> roles) {
-        this.roles = roles;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -94,13 +116,32 @@ public class UserEntity extends BaseEntity {
     public void setEmail(String email) {
         this.email = email;
     }
-        @Override
-    public Long getId() {
-        return id;
-    }
 
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public List<AssignmentBuildingEntity> getAssignmentBuildingEntities() {
+//        return assignmentBuildingEntities;
+//    }
+//
+//    public void setAssignmentBuildingEntities(List<AssignmentBuildingEntity> assignmentBuildingEntities) {
+//        this.assignmentBuildingEntities = assignmentBuildingEntities;
+//    }
 }
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "user_role",
+//            joinColumns = @JoinColumn(name = "user_id", nullable = false),
+//            inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false))
+//    private List<RoleEntity> roles = new ArrayList<>();
+
+//    public List<UserRoleEntity> getRoles() {
+//        return roles;
+//    }
+//
+//    public void setRoles(List<UserRoleEntity> roles) {
+//        this.roles = roles;
+//    }
+
+// Thu cong
+//    @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
+//    private List<AssignmentBuildingEntity> assignmentBuildingEntities = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
+//    private List<UserRoleEntity> roles = new ArrayList<>();

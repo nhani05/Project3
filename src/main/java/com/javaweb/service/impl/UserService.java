@@ -55,7 +55,7 @@ public class UserService implements IUserService {
         List<UserDTO> result = new ArrayList<>();
         for (UserEntity userEntity : newsEntities) {
             UserDTO userDTO = userConverter.convertToDto(userEntity);
-            userDTO.setRoleCode(userEntity.getRoles().get(0).getCode());
+            userDTO.setRoleCode(userEntity.getRoleEntities().get(0).getCode());
             result.add(userDTO);
         }
         return result;
@@ -68,7 +68,7 @@ public class UserService implements IUserService {
         List<UserDTO> results = new ArrayList<>();
         for (UserEntity userEntity : userEntities) {
             UserDTO userDTO = userConverter.convertToDto(userEntity);
-            userDTO.setRoleCode(userEntity.getRoles().get(0).getCode());
+            userDTO.setRoleCode(userEntity.getRoleEntities().get(0).getCode());
             results.add(userDTO);
         }
         return results;
@@ -82,7 +82,7 @@ public class UserService implements IUserService {
     @Override
     public Map<Long, String> getStaffṣ̣() {
         Map<Long, String> staffs = new HashMap<>();
-        List<UserEntity> userEntities = userRepository.findByStatusAndRoles_Code(1, "STAFF");
+        List<UserEntity> userEntities = userRepository.findByStatusAndRoleEntitiesCode(1, "STAFF");
         for (UserEntity userEntity : userEntities) {
             staffs.put(userEntity.getId(), userEntity.getFullName());
         }
@@ -111,7 +111,7 @@ public class UserService implements IUserService {
     @Override
     public UserDTO findUserById(long id) {
         UserEntity entity = userRepository.findById(id).get();
-        List<RoleEntity> roles = entity.getRoles();
+        List<RoleEntity> roles = entity.getRoleEntities();
         UserDTO dto = userConverter.convertToDto(entity);
         roles.forEach(item -> {
             dto.setRoleCode(item.getCode());
@@ -124,7 +124,7 @@ public class UserService implements IUserService {
     public UserDTO insert(UserDTO newUser) {
         RoleEntity role = roleRepository.findOneByCode(newUser.getRoleCode());
         UserEntity userEntity = userConverter.convertToEntity(newUser);
-        userEntity.setRoles(Stream.of(role).collect(Collectors.toList()));
+        userEntity.setRoleEntities(Stream.of(role).collect(Collectors.toList()));
         userEntity.setStatus(1);
         userEntity.setPassword(passwordEncoder.encode(SystemConstant.PASSWORD_DEFAULT));
         return userConverter.convertToDto(userRepository.save(userEntity));
@@ -138,7 +138,7 @@ public class UserService implements IUserService {
         UserEntity userEntity = userConverter.convertToEntity(updateUser);
         userEntity.setUserName(oldUser.getUserName());
         userEntity.setStatus(oldUser.getStatus());
-        userEntity.setRoles(Stream.of(role).collect(Collectors.toList()));
+        userEntity.setRoleEntities(Stream.of(role).collect(Collectors.toList()));
         userEntity.setPassword(oldUser.getPassword());
         return userConverter.convertToDto(userRepository.save(userEntity));
     }

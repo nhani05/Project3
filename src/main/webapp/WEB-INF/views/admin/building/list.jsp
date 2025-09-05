@@ -326,48 +326,7 @@
 
                                     </td>
                                 </tr>
-
                             </c:forEach>
-
-                            <%--                            <tr>--%>
-                            <%--                                <td class="center">--%>
-                            <%--                                    <label class="pos-rel">--%>
-                            <%--                                        <input type="checkbox" class="ace">--%>
-                            <%--                                        <span class="lbl"></span>--%>
-                            <%--                                    </label>--%>
-                            <%--                                </td>--%>
-
-                            <%--                                <td>MatrixOne Building</td>--%>
-                            <%--                                <td>Lê Quang Đạo, Nam Từ Liêm</td>--%>
-                            <%--                                <td>1</td>--%>
-                            <%--                                <td>Anh Long</td>--%>
-                            <%--                                <td>0983456789</td>--%>
-                            <%--                                <td>150</td>--%>
-                            <%--                                <td>50</td>--%>
-                            <%--                                <td>100</td>--%>
-                            <%--                                <td class="hidden-480">--%>
-                            <%--                                    <span class="label label-sm label-warning">Expiring</span>--%>
-                            <%--                                </td>--%>
-
-                            <%--                                <td>--%>
-                            <%--                                    <div class="hidden-sm hidden-xs btn-group" bis_skin_checked="1">--%>
-                            <%--                                        <button class="btn btn-xs btn-success" title="Giao Tòa Nhà"--%>
-                            <%--                                                onclick="assignmentBuilding(2)">--%>
-                            <%--                                            <i class="ace-icon fa fa-check bigger-120"></i>--%>
-                            <%--                                        </button>--%>
-
-                            <%--                                        <a class="btn btn-xs btn-info" title="Chỉnh sửa tòa nhà"--%>
-                            <%--                                           href="/admin/building-edit">--%>
-                            <%--                                            <i class="ace-icon fa fa-pencil bigger-120"></i>--%>
-                            <%--                                        </a>--%>
-
-                            <%--                                        <button class="btn btn-xs btn-danger">--%>
-                            <%--                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>--%>
-                            <%--                                        </button>--%>
-
-                            <%--                                    </div>--%>
-                            <%--                                </td>--%>
-                            <%--                            </tr>--%>
                             </tbody>
                         </table>
                     </div>
@@ -397,23 +356,6 @@
                     </thead>
 
                     <tbody>
-                    <tr>
-                        <td class="center">
-                            <input type="checkbox" name="checkbox_1" id="checkbox_1" value="1" checked>
-                        </td>
-                        <td>
-                            Nguyễn Văn A
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="center">
-                            <input type="checkbox" name="checkbox_2" id="checkbox_2" value="2">
-                        </td>
-                        <td>
-                            Nguyễn Văn B
-                        </td>
-                    </tr>
 
                     </tbody>
                 </table>
@@ -445,10 +387,19 @@
             contentType: "application/json",
             dataType: "JSON", // định dạng của respond
             success: function (result) {
-                console.log("Đã thành công!");
+                var row = '';
+                $.each(result.data, function (index, item) {
+                    row += '<tr>';
+                    row += `<td class="center"> <input type="checkbox" value="${item.staffId}" ${item.checked}></td>`;
+                    row += '<td>${item.fullName}</td>'
+                    row += '</tr>'
+                });
+                $('#staffList tbody').html(row);
+                console.info("Succes");
             },
             error: function (respond) {
                 console.log("Đã thất bại!");
+                window.location.href = "/admin/building-list?message=error";
                 console.log(respond);
             }
         });
@@ -458,7 +409,6 @@
         e.preventDefault();
         var data = {};
         data['buildingId'] = $('#buildingId').val(); // nhớ có thẻ input hidden id=buildingId
-
         var staffs = $('#staffList').find('tbody input[type=checkbox]:checked').map(function () {
             return $(this).val();
         }).get();
@@ -508,3 +458,20 @@
 
 </body>
 </html>
+<%--<tr>--%>
+<%--    <td class="center">--%>
+<%--        <input type="checkbox" name="checkbox_1" id="checkbox_1" value="1" checked>--%>
+<%--    </td>--%>
+<%--    <td>--%>
+<%--        Nguyễn Văn A--%>
+<%--    </td>--%>
+<%--</tr>--%>
+
+<%--<tr>--%>
+<%--    <td class="center">--%>
+<%--        <input type="checkbox" name="checkbox_2" id="checkbox_2" value="2">--%>
+<%--    </td>--%>
+<%--    <td>--%>
+<%--        Nguyễn Văn B--%>
+<%--    </td>--%>
+<%--</tr>--%>

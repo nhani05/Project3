@@ -1,21 +1,40 @@
 package com.javaweb.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Entity(name = "assignmentbuilding")
-public class AssignmentBuildingEntity {
+@Entity
+@Table(name = "assignmentbuilding")
+public class AssignmentBuildingEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-//    id bigint AI PK
+    @ManyToOne
+    @JoinColumn(name = "buildingid")
+    private BuildingEntity buildingEntity;
 
-    @Column("ma")
-    staffid bigint
-    buildingid bigint
-    createddate datetime
-    modifieddate datetime
-    createdby varchar(255)
-    modifiedby varchar(255)
+    @ManyToOne
+    @JoinColumn(name = "staffid")
+    private UserEntity userEntity;
+
+    public BuildingEntity getBuildingEntity() {
+        return buildingEntity;
+    }
+
+    public void setBuildingEntity(BuildingEntity buildingEntity) {
+        this.buildingEntity = buildingEntity;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+    //    staffid bigint
+//    buildingid bigint
+//    createddate datetime
+//    modifieddate datetime
+//    createdby varchar(255)
+//    modifiedby varchar(255)
 
 }

@@ -13,15 +13,27 @@ public class RoleEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="code")
+    @Column(name = "code")
     private String code;
+    @ManyToMany(mappedBy = "roleEntities")
+    private List<UserEntity> userEntities = new ArrayList<UserEntity>();
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
+
+    //----------------------------------------------------------------------------------------
+    public List<UserEntity> getUserEntities() {
+        return userEntities;
+    }
+
+    public void setUserEntities(List<UserEntity> userEntities) {
+        this.userEntities = userEntities;
+    }
+
 
     @Override
     public Long getId() {
@@ -32,12 +44,6 @@ public class RoleEntity extends BaseEntity {
     public void setId(Long id) {
         this.id = id;
     }
-
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private List<UserEntity> user = new ArrayList<>();
-
-//    @OneToMany(mappedBy="roles",fetch = FetchType.LAZY)
-//    private List<UserRoleEntity> userRoleEntities = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -55,12 +61,21 @@ public class RoleEntity extends BaseEntity {
         this.code = code;
     }
 
-    public List<UserEntity> getUsers() {
-        return user;
-    }
-
-    public void setUsers(List<UserEntity> users) {
-        this.user = users;
-    }
+//
 
 }
+
+
+//    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+//    private List<UserEntity> user = new ArrayList<>();
+
+//    @OneToMany(mappedBy="roles",fetch = FetchType.LAZY)
+//    private List<UserRoleEntity> userRoleEntities = new ArrayList<>();
+
+//    public List<UserEntity> getUsers() {
+/// /        return user;
+/// /    }
+/// /
+/// /    public void setUsers(List<UserEntity> users) {
+/// /        this.user = users;
+/// /    }

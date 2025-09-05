@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController(value = "buildingAPTOfAdmin")
+@RestController(value = "buildingAPIOfAdmin")
 //@RequestMapping("/api/building")
 public class BuildingAPI {
 
